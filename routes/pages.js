@@ -64,6 +64,10 @@ router.get('/sobre', (req, res) => {
  * Rota: GET /contato
  * Descrição: Página de contato
  */
+ router.get('/projetos', (req, res) => {
+  res.render('projetos', { titulo: 'Projetos' });
+ });
+
 router.get('/contato', (req, res) => {
     console.log('📞 Acessando página de contato...');
     
