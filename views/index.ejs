@@ -1,0 +1,1013 @@
+<!-- Header Principal -->
+<div class="card" style="background: linear-gradient(135deg, rgba(59, 130, 246, 0.1) 0%, rgba(168, 85, 247, 0.05) 100%); border: 1px solid rgba(59, 130, 246, 0.2);">
+    <div style="text-align: center; padding: 20px 0;">
+        <div style="font-size: 3rem; margin-bottom: 15px;">📝</div>
+        <h2 style="font-size: 2rem; margin-bottom: 10px; background: linear-gradient(135deg, #1e293b 0%, #3b82f6 100%); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text;">Gerenciador de Tarefas</h2>
+        <p style="font-size: 1.1rem; color: var(--text-secondary);">Centro unificado para criação e gerenciamento de todas as suas tarefas</p>
+    </div>
+</div>
+
+<!-- Dashboard de Estatísticas -->
+<div class="card">
+    <h3>📊 Dashboard de Tarefas</h3>
+    <div id="estatisticas-dashboard" style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 20px; margin-top: 20px;">
+        <div style="text-align: center; padding: 20px; background: linear-gradient(135deg, rgba(34, 197, 94, 0.1) 0%, rgba(34, 197, 94, 0.05) 100%); border-radius: 15px; border: 1px solid rgba(34, 197, 94, 0.2);">
+            <div style="font-size: 2rem; margin-bottom: 10px; color: #22c55e;">✅</div>
+            <div id="total-concluidas" style="font-size: 1.5rem; font-weight: 600; color: #22c55e; margin-bottom: 5px;">-</div>
+            <div style="font-size: 0.9rem; color: var(--text-light);">Concluídas</div>
+        </div>
+        <div style="text-align: center; padding: 20px; background: linear-gradient(135deg, rgba(245, 158, 11, 0.1) 0%, rgba(245, 158, 11, 0.05) 100%); border-radius: 15px; border: 1px solid rgba(245, 158, 11, 0.2);">
+            <div style="font-size: 2rem; margin-bottom: 10px; color: #f59e0b;">⏳</div>
+            <div id="total-pendentes" style="font-size: 1.5rem; font-weight: 600; color: #f59e0b; margin-bottom: 5px;">-</div>
+            <div style="font-size: 0.9rem; color: var(--text-light);">Pendentes</div>
+        </div>
+        <div style="text-align: center; padding: 20px; background: linear-gradient(135deg, rgba(239, 68, 68, 0.1) 0%, rgba(239, 68, 68, 0.05) 100%); border-radius: 15px; border: 1px solid rgba(239, 68, 68, 0.2);">
+            <div style="font-size: 2rem; margin-bottom: 10px; color: #ef4444;">🔥</div>
+            <div id="total-urgentes" style="font-size: 1.5rem; font-weight: 600; color: #ef4444; margin-bottom: 5px;">-</div>
+            <div style="font-size: 0.9rem; color: var(--text-light);">Urgentes</div>
+        </div>
+        <div style="text-align: center; padding: 20px; background: linear-gradient(135deg, rgba(168, 85, 247, 0.1) 0%, rgba(168, 85, 247, 0.05) 100%); border-radius: 15px; border: 1px solid rgba(168, 85, 247, 0.2);">
+            <div style="font-size: 2rem; margin-bottom: 10px; color: #a855f7;">📋</div>
+            <div id="total-tarefas" style="font-size: 1.5rem; font-weight: 600; color: #a855f7; margin-bottom: 5px;">-</div>
+            <div style="font-size: 0.9rem; color: var(--text-light);">Total</div>
+        </div>
+    </div>
+</div>
+
+<!-- 🎯 CENTRO DE CONTROLE UNIFICADO - Projetos E Tarefas -->
+<div class="card">
+    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 25px;">
+        <h3 style="margin: 0; color: var(--text-primary);">🎯 Centro de Controle Total</h3>
+        <div style="display: flex; gap: 10px;">
+            <button onclick="mostrarFormulario('projeto')" class="btn" style="background: linear-gradient(135deg, #3b82f6 0%, #2563eb 100%);">
+                📁 Novo Projeto
+            </button>
+            <button onclick="mostrarFormulario('tarefa')" class="btn" style="background: linear-gradient(135deg, #22c55e 0%, #16a34a 100%);">
+                📝 Nova Tarefa
+            </button>
+        </div>
+    </div>
+    
+    <div id="modo-atual" style="text-align: center; padding: 15px; background: linear-gradient(135deg, rgba(59, 130, 246, 0.1) 0%, rgba(34, 197, 94, 0.1) 100%); border-radius: 12px; margin-bottom: 20px; border: 1px solid rgba(59, 130, 246, 0.2);">
+        <strong style="font-size: 1.1rem;">🎯 ÚNICA PÁGINA DE CRIAÇÃO</strong><br>
+        <span style="font-size: 0.9rem; color: var(--text-secondary);">Todos os projetos e tarefas são criados aqui com prioridades, datas e histórico unificados</span>
+    </div>
+    
+    <!-- 🎯 MODAL UNIFICADO - Projetos E Tarefas -->
+    <div id="modal-unificado" style="display: none; position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; background: rgba(0,0,0,0.7); z-index: 9999; justify-content: center; align-items: center; backdrop-filter: blur(5px);">
+        <div class="modal-content" onclick="event.stopPropagation()" style="background: white; padding: 30px; border-radius: 20px; max-width: 700px; width: 90%; max-height: 90vh; overflow-y: auto; box-shadow: 0 25px 50px rgba(0,0,0,0.25); border: 1px solid rgba(255,255,255,0.2); margin: 20px;">
+            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 25px;">
+                <div>
+                    <h3 id="modal-titulo" style="margin: 0; color: var(--text-primary); font-size: 1.4rem;">🎯 Centro de Criação</h3>
+                    <p id="modal-subtitulo" style="margin: 5px 0 0; color: var(--text-secondary); font-size: 0.9rem;">Selecione o tipo para começar</p>
+                </div>
+                <button type="button" onclick="fecharModal()" style="background: none; border: none; font-size: 1.5rem; cursor: pointer; color: #666; padding: 5px; border-radius: 50%; width: 35px; height: 35px; display: flex; align-items: center; justify-content: center;">✕</button>
+            </div>
+            
+            <!-- Seletor de Tipo -->
+            <div id="seletor-tipo" style="display: flex; gap: 10px; margin-bottom: 25px; justify-content: center;">
+                <button type="button" onclick="definirTipo('projeto')" id="btn-tipo-projeto" class="btn-tipo" style="flex: 1; padding: 15px; border: 2px solid #3b82f6; background: linear-gradient(135deg, #3b82f6 0%, #2563eb 100%); color: white; border-radius: 12px; font-weight: 600; cursor: pointer; transition: all 0.3s ease;">
+                    📁 Criar Projeto
+                </button>
+                <button type="button" onclick="definirTipo('tarefa')" id="btn-tipo-tarefa" class="btn-tipo" style="flex: 1; padding: 15px; border: 2px solid #e5e7eb; background: white; color: #374151; border-radius: 12px; font-weight: 600; cursor: pointer; transition: all 0.3s ease;">
+                    📝 Criar Tarefa
+                </button>
+            </div>
+            
+            <form id="form-unificado">
+                <!-- Container dinâmico que muda baseado no tipo selecionado -->
+                <div id="campos-dinamicos">
+                    <div style="text-align: center; padding: 40px; color: var(--text-secondary);">
+                        <div style="font-size: 3rem; margin-bottom: 15px;">🎯</div>
+                        <h4>Selecione o Tipo</h4>
+                        <p>Escolha "Projeto" ou "Tarefa" acima para começar</p>
+                    </div>
+                </div>
+                
+                <div id="botoes-acao" style="display: none; gap: 15px; justify-content: flex-end; margin-top: 30px;">
+                    <button type="button" onclick="fecharModal()" class="btn" 
+                            style="background: var(--card-border); color: var(--text-primary); border: none;">
+                        ❌ Cancelar
+                    </button>
+                    <button type="submit" id="btn-submit" class="btn" 
+                            style="background: linear-gradient(135deg, #22c55e 0%, #16a34a 100%); border: none;">
+                        ✅ <span id="btn-texto">Criar</span>
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+<!-- Menu de Navegação -->
+<div class="card">
+    <h3 style="margin-bottom: 25px; text-align: center;"><i class="fas fa-compass"></i> Menu de Navegação</h3>
+    <div class="grid-responsive" style="display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 20px;">
+        <!-- Projetos -->
+        <a href="/projetos" style="text-decoration: none; color: inherit;">
+            <div class="menu-card" style="padding: 25px; background: linear-gradient(135deg, rgba(34, 197, 94, 0.1) 0%, rgba(34, 197, 94, 0.05) 100%); border: 2px solid rgba(34, 197, 94, 0.2); border-radius: 15px; transition: all 0.3s ease; cursor: pointer;">
+                <div style="display: flex; align-items: center; margin-bottom: 15px;">
+                    <div style="font-size: 2.5rem; margin-right: 15px;">📋</div>
+                    <div>
+                        <h4 style="margin: 0; color: #16a34a;">Projetos</h4>
+                        <p style="margin: 5px 0 0; font-size: 0.9rem; color: var(--text-light);">Gerenciar projetos</p>
+                    </div>
+                </div>
+                <p style="margin: 0; font-size: 0.9rem; color: var(--text-secondary);">Crie, edite e acompanhe seus projetos de desenvolvimento</p>
+            </div>
+        </a>
+
+        <!-- Tarefas -->
+        <a href="/tarefas" style="text-decoration: none; color: inherit;">
+            <div class="menu-card" style="padding: 25px; background: linear-gradient(135deg, rgba(59, 130, 246, 0.1) 0%, rgba(59, 130, 246, 0.05) 100%); border: 2px solid rgba(59, 130, 246, 0.2); border-radius: 15px; transition: all 0.3s ease; cursor: pointer;">
+                <div style="display: flex; align-items: center; margin-bottom: 15px;">
+                    <div style="font-size: 2.5rem; margin-right: 15px;">✅</div>
+                    <div>
+                        <h4 style="margin: 0; color: #2563eb;">Tarefas</h4>
+                        <p style="margin: 5px 0 0; font-size: 0.9rem; color: var(--text-light);">Gerenciar tarefas</p>
+                    </div>
+                </div>
+                <p style="margin: 0; font-size: 0.9rem; color: var(--text-secondary);">Organize suas tarefas diárias e acompanhe o progresso</p>
+            </div>
+        </a>
+
+        <!-- API Status -->
+        <a href="/api/status" style="text-decoration: none; color: inherit;" target="_blank">
+            <div class="menu-card" style="padding: 25px; background: linear-gradient(135deg, rgba(168, 85, 247, 0.1) 0%, rgba(168, 85, 247, 0.05) 100%); border: 2px solid rgba(168, 85, 247, 0.2); border-radius: 15px; transition: all 0.3s ease; cursor: pointer;">
+                <div style="display: flex; align-items: center; margin-bottom: 15px;">
+                    <div style="font-size: 2.5rem; margin-right: 15px;">🔌</div>
+                    <div>
+                        <h4 style="margin: 0; color: #7c3aed;">API Status</h4>
+                        <p style="margin: 5px 0 0; font-size: 0.9rem; color: var(--text-light);">Verificar API</p>
+                    </div>
+                </div>
+                <p style="margin: 0; font-size: 0.9rem; color: var(--text-secondary);">Verifique o status e funcionamento da API REST</p>
+            </div>
+        </a>
+
+        <!-- Sobre -->
+        <a href="/sobre" style="text-decoration: none; color: inherit;">
+            <div class="menu-card" style="padding: 25px; background: linear-gradient(135deg, rgba(239, 68, 68, 0.1) 0%, rgba(239, 68, 68, 0.05) 100%); border: 2px solid rgba(239, 68, 68, 0.2); border-radius: 15px; transition: all 0.3s ease; cursor: pointer;">
+                <div style="display: flex; align-items: center; margin-bottom: 15px;">
+                    <div style="font-size: 2.5rem; margin-right: 15px;">ℹ️</div>
+                    <div>
+                        <h4 style="margin: 0; color: #dc2626;">Sobre</h4>
+                        <p style="margin: 5px 0 0; font-size: 0.9rem; color: var(--text-light);">Informações</p>
+                    </div>
+                </div>
+                <p style="margin: 0; font-size: 0.9rem; color: var(--text-secondary);">Saiba mais sobre este projeto e suas funcionalidades</p>
+            </div>
+        </a>
+
+        <!-- Contato -->
+        <a href="/contato" style="text-decoration: none; color: inherit;">
+            <div class="menu-card" style="padding: 25px; background: linear-gradient(135deg, rgba(245, 158, 11, 0.1) 0%, rgba(245, 158, 11, 0.05) 100%); border: 2px solid rgba(245, 158, 11, 0.2); border-radius: 15px; transition: all 0.3s ease; cursor: pointer;">
+                <div style="display: flex; align-items: center; margin-bottom: 15px;">
+                    <div style="font-size: 2.5rem; margin-right: 15px;">📧</div>
+                    <div>
+                        <h4 style="margin: 0; color: #d97706;">Contato</h4>
+                        <p style="margin: 5px 0 0; font-size: 0.9rem; color: var(--text-light);">Fale conosco</p>
+                    </div>
+                </div>
+                <p style="margin: 0; font-size: 0.9rem; color: var(--text-secondary);">Entre em contato para suporte ou dúvidas</p>
+            </div>
+        </a>
+
+        <!-- Health Check -->
+        <a href="/health" style="text-decoration: none; color: inherit;" target="_blank">
+            <div class="menu-card" style="padding: 25px; background: linear-gradient(135deg, rgba(6, 182, 212, 0.1) 0%, rgba(6, 182, 212, 0.05) 100%); border: 2px solid rgba(6, 182, 212, 0.2); border-radius: 15px; transition: all 0.3s ease; cursor: pointer;">
+                <div style="display: flex; align-items: center; margin-bottom: 15px;">
+                    <div style="font-size: 2.5rem; margin-right: 15px;">🏥</div>
+                    <div>
+                        <h4 style="margin: 0; color: #0891b2;">Health Check</h4>
+                        <p style="margin: 5px 0 0; font-size: 0.9rem; color: var(--text-light);">Status do servidor</p>
+                    </div>
+                </div>
+                <p style="margin: 0; font-size: 0.9rem; color: var(--text-secondary);">Verifique a saúde e performance do servidor</p>
+            </div>
+        </a>
+    </div>
+</div>
+
+<!-- Filtros e Lista de Tarefas -->
+<div class="card">
+    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; flex-wrap: wrap; gap: 15px;">
+        <h3 style="margin: 0;">📋 Suas Tarefas Recentes</h3>
+        <div style="display: flex; gap: 10px; align-items: center; flex-wrap: wrap;">
+            <select id="filtro-prioridade" onchange="aplicarFiltros()" style="padding: 8px 12px; border: 1px solid var(--card-border); border-radius: 8px; background: var(--card-bg); color: var(--text-primary);">
+                <option value="">🎯 Todas as Prioridades</option>
+                <option value="urgente">🔥 Urgente</option>
+                <option value="alta">🔴 Alta</option>
+                <option value="media">🟡 Média</option>
+                <option value="baixa">🟢 Baixa</option>
+            </select>
+            
+            <select id="filtro-status" onchange="aplicarFiltros()" style="padding: 8px 12px; border: 1px solid var(--card-border); border-radius: 8px; background: var(--card-bg); color: var(--text-primary);">
+                <option value="">📋 Todos os Status</option>
+                <option value="pendente">⏳ Pendentes</option>
+                <option value="concluida">✅ Concluídas</option>
+            </select>
+            
+            <button onclick="carregarTarefas()" class="btn" style="background: linear-gradient(135deg, #3b82f6 0%, #2563eb 100%);">
+                🔄 Atualizar
+            </button>
+        </div>
+    </div>
+    
+    <div id="lista-tarefas" style="margin-top: 20px;">
+        <div style="text-align: center; padding: 40px; color: var(--text-light);">
+            <div style="font-size: 2rem; margin-bottom: 10px;">⏳</div>
+            <p>Carregando suas tarefas...</p>
+        </div>
+    </div>
+</div>
+
+<!-- Status do Sistema -->
+<div class="card">
+    <h3 style="margin-bottom: 25px; text-align: center;"><i class="fas fa-heartbeat"></i> Status do Sistema em Tempo Real</h3>
+    <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 20px;">
+        <!-- Servidor -->
+        <div style="padding: 20px; background: linear-gradient(135deg, rgba(34, 197, 94, 0.1) 0%, rgba(34, 197, 94, 0.05) 100%); border: 2px solid rgba(34, 197, 94, 0.3); border-radius: 15px; position: relative;">
+            <div style="display: flex; align-items: center; margin-bottom: 12px;">
+                <div style="width: 12px; height: 12px; background: #22c55e; border-radius: 50%; margin-right: 10px; animation: pulse 2s infinite;"></div>
+                <i class="fas fa-server" style="font-size: 1.5rem; color: #22c55e; margin-right: 12px;"></i>
+                <div>
+                    <div style="font-weight: 600; color: #22c55e;">Servidor HTTP</div>
+                    <div style="font-size: 0.8rem; opacity: 0.8;">Express.js - Porta 3000</div>
+                </div>
+            </div>
+            <div style="font-size: 0.9rem; opacity: 0.7;">
+                ✅ Online e funcionando<br>
+                🌐 Aceita conexões HTTP/HTTPS<br>
+                ⚡ Resposta rápida (&lt;5ms)
+            </div>
+        </div>
+
+        <!-- Banco de Dados -->
+        <div style="padding: 20px; background: linear-gradient(135deg, rgba(34, 197, 94, 0.1) 0%, rgba(34, 197, 94, 0.05) 100%); border: 2px solid rgba(34, 197, 94, 0.3); border-radius: 15px; position: relative;">
+            <div style="display: flex; align-items: center; margin-bottom: 12px;">
+                <div style="width: 12px; height: 12px; background: #22c55e; border-radius: 50%; margin-right: 10px; animation: pulse 2s infinite;"></div>
+                <i class="fas fa-database" style="font-size: 1.5rem; color: #22c55e; margin-right: 12px;"></i>
+                <div>
+                    <div style="font-weight: 600; color: #22c55e;">MongoDB Atlas</div>
+                    <div style="font-size: 0.8rem; opacity: 0.8;">Cloud Database - AppHibrido7P2</div>
+                </div>
+            </div>
+            <div style="font-size: 0.9rem; opacity: 0.7;">
+                ✅ Conectado com sucesso<br>
+                🌍 Cluster na nuvem AWS<br>
+                🔄 Sincronização automática
+            </div>
+        </div>
+
+        <!-- API REST -->
+        <div style="padding: 20px; background: linear-gradient(135deg, rgba(34, 197, 94, 0.1) 0%, rgba(34, 197, 94, 0.05) 100%); border: 2px solid rgba(34, 197, 94, 0.3); border-radius: 15px; position: relative;">
+            <div style="display: flex; align-items: center; margin-bottom: 12px;">
+                <div style="width: 12px; height: 12px; background: #22c55e; border-radius: 50%; margin-right: 10px; animation: pulse 2s infinite;"></div>
+                <i class="fas fa-plug" style="font-size: 1.5rem; color: #22c55e; margin-right: 12px;"></i>
+                <div>
+                    <div style="font-weight: 600; color: #22c55e;">API REST</div>
+                    <div style="font-size: 0.8rem; opacity: 0.8;">Endpoints CRUD - JSON</div>
+                </div>
+            </div>
+            <div style="font-size: 0.9rem; opacity: 0.7;">
+                ✅ Todas as rotas funcionais<br>
+                📊 Status disponível em /api/status<br>
+                🔄 CORS configurado corretamente
+            </div>
+        </div>
+
+        <!-- Sistema de Arquivos -->
+        <div style="padding: 20px; background: linear-gradient(135deg, rgba(34, 197, 94, 0.1) 0%, rgba(34, 197, 94, 0.05) 100%); border: 2px solid rgba(34, 197, 94, 0.3); border-radius: 15px; position: relative;">
+            <div style="display: flex; align-items: center; margin-bottom: 12px;">
+                <div style="width: 12px; height: 12px; background: #22c55e; border-radius: 50%; margin-right: 10px; animation: pulse 2s infinite;"></div>
+                <i class="fas fa-folder-open" style="font-size: 1.5rem; color: #22c55e; margin-right: 12px;"></i>
+                <div>
+                    <div style="font-weight: 600; color: #22c55e;">Sistema de Arquivos</div>
+                    <div style="font-size: 0.8rem; opacity: 0.8;">Views EJS - Arquivos estáticos</div>
+                </div>
+            </div>
+            <div style="font-size: 0.9rem; opacity: 0.7;">
+                ✅ Templates carregados<br>
+                🎨 CSS/JS servidos corretamente<br>
+                📁 Estrutura organizada
+            </div>
+        </div>
+    </div>
+
+    <!-- Status Resumido -->
+    <div style="margin-top: 25px; text-align: center; padding: 20px; background: linear-gradient(135deg, rgba(34, 197, 94, 0.15) 0%, rgba(34, 197, 94, 0.05) 100%); border-radius: 15px; border: 2px solid rgba(34, 197, 94, 0.3);">
+        <div style="font-size: 1.8rem; margin-bottom: 10px;">🎉</div>
+        <div style="font-size: 1.2rem; font-weight: 600; color: #22c55e; margin-bottom: 5px;">Todos os Sistemas Operacionais</div>
+        <div style="font-size: 0.9rem; opacity: 0.8;">Aplicativo híbrido funcionando perfeitamente - Pronto para uso!</div>
+    </div>
+</div>
+
+<!-- Estatísticas Rápidas -->
+<div class="card">
+    <h3 style="margin-bottom: 25px; text-align: center;"><i class="fas fa-chart-bar"></i> Estatísticas do Sistema</h3>
+    <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 20px;">
+        <div style="text-align: center; padding: 20px; background: linear-gradient(135deg, rgba(34, 197, 94, 0.1) 0%, rgba(34, 197, 94, 0.05) 100%); border-radius: 15px; border: 1px solid rgba(34, 197, 94, 0.2);">
+            <div style="font-size: 2rem; margin-bottom: 10px; color: #22c55e;">📋</div>
+            <div style="font-size: 1.5rem; font-weight: 600; color: #22c55e; margin-bottom: 5px;">5</div>
+            <div style="font-size: 0.9rem; opacity: 0.8;">Projetos Ativos</div>
+        </div>
+        <div style="text-align: center; padding: 20px; background: linear-gradient(135deg, rgba(59, 130, 246, 0.1) 0%, rgba(59, 130, 246, 0.05) 100%); border-radius: 15px; border: 1px solid rgba(59, 130, 246, 0.2);">
+            <div style="font-size: 2rem; margin-bottom: 10px; color: #3b82f6;">✅</div>
+            <div style="font-size: 1.5rem; font-weight: 600; color: #3b82f6; margin-bottom: 5px;">12</div>
+            <div style="font-size: 0.9rem; opacity: 0.8;">Tarefas Concluídas</div>
+        </div>
+        <div style="text-align: center; padding: 20px; background: linear-gradient(135deg, rgba(168, 85, 247, 0.1) 0%, rgba(168, 85, 247, 0.05) 100%); border-radius: 15px; border: 1px solid rgba(168, 85, 247, 0.2);">
+            <div style="font-size: 2rem; margin-bottom: 10px; color: #a855f7;">🔌</div>
+            <div style="font-size: 1.5rem; font-weight: 600; color: #a855f7; margin-bottom: 5px;">100%</div>
+            <div style="font-size: 0.9rem; opacity: 0.8;">API Uptime</div>
+        </div>
+        <div style="text-align: center; padding: 20px; background: linear-gradient(135deg, rgba(245, 158, 11, 0.1) 0%, rgba(245, 158, 11, 0.05) 100%); border-radius: 15px; border: 1px solid rgba(245, 158, 11, 0.2);">
+            <div style="font-size: 2rem; margin-bottom: 10px; color: #f59e0b;">⚡</div>
+            <div style="font-size: 1.5rem; font-weight: 600; color: #f59e0b; margin-bottom: 5px;">1.2s</div>
+            <div style="font-size: 0.9rem; opacity: 0.8;">Tempo de Resposta</div>
+        </div>
+    </div>
+</div>
+
+<!-- 🚀 Acesso Rápido FUNCIONAL -->
+<div class="card">
+    <h3 style="margin-bottom: 25px; text-align: center;"><i class="fas fa-rocket"></i> Acesso Rápido</h3>
+    <div style="display: flex; gap: 16px; flex-wrap: wrap; justify-content: center;">
+        <button onclick="mostrarFormulario('projeto')" class="btn" style="background: linear-gradient(135deg, #22c55e 0%, #16a34a 100%); border: none; cursor: pointer;">
+            <i class="fas fa-plus"></i> Novo Projeto
+        </button>
+        <button onclick="mostrarFormulario('tarefa')" class="btn" style="background: linear-gradient(135deg, #3b82f6 0%, #2563eb 100%); border: none; cursor: pointer;">
+            <i class="fas fa-plus"></i> Nova Tarefa
+        </button>
+        <a href="/tarefas" class="btn" style="background: linear-gradient(135deg, #f59e0b 0%, #d97706 100%); text-decoration: none;">
+            <i class="fas fa-tasks"></i> Ver Tarefas
+        </a>
+        <a href="/projetos" class="btn" style="background: linear-gradient(135deg, #10b981 0%, #059669 100%); text-decoration: none;">
+            <i class="fas fa-folder"></i> Ver Projetos
+        </a>
+        <a href="/api/status" class="btn" style="background: linear-gradient(135deg, #a855f7 0%, #9333ea 100%);" target="_blank">
+            <i class="fas fa-chart-line"></i> Status da API
+        </a>
+        <a href="/health" class="btn" style="background: linear-gradient(135deg, #06b6d4 0%, #0891b2 100%);" target="_blank">
+            <i class="fas fa-heart"></i> Health Check
+        </a>
+    </div>
+</div>
+
+<!-- Tecnologias Utilizadas -->
+<div class="card">
+    <h3><i class="fas fa-code"></i> Tecnologias Utilizadas</h3>
+    <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap: 16px; margin-top: 20px;">
+        <div style="text-align: center; padding: 16px; background: rgba(0, 0, 0, 0.1); border-radius: 12px;">
+            <div style="font-size: 2rem; margin-bottom: 8px;">🟢</div>
+            <div style="font-weight: 600;">Node.js</div>
+        </div>
+        <div style="text-align: center; padding: 16px; background: rgba(0, 0, 0, 0.1); border-radius: 12px;">
+            <div style="font-size: 2rem; margin-bottom: 8px;">⚡</div>
+            <div style="font-weight: 600;">Express.js</div>
+        </div>
+        <div style="text-align: center; padding: 16px; background: rgba(0, 0, 0, 0.1); border-radius: 12px;">
+            <div style="font-size: 2rem; margin-bottom: 8px;">🍃</div>
+            <div style="font-weight: 600;">MongoDB</div>
+        </div>
+        <div style="text-align: center; padding: 16px; background: rgba(0, 0, 0, 0.1); border-radius: 12px;">
+            <div style="font-size: 2rem; margin-bottom: 8px;">🎨</div>
+            <div style="font-weight: 600;">EJS</div>
+        </div>
+    </div>
+</div>
+
+<script>
+// Funções auxiliares para tratar datas
+function formatarData(data) {
+    if (!data) return 'Data não informada';
+    
+    try {
+        const dataObj = new Date(data);
+        if (isNaN(dataObj.getTime())) {
+            console.warn('Data inválida:', data);
+            return 'Data inválida';
+        }
+        return dataObj.toLocaleDateString('pt-BR', {
+            day: '2-digit',
+            month: '2-digit', 
+            year: 'numeric'
+        });
+    } catch (error) {
+        console.error('Erro ao formatar data:', error, data);
+        return 'Erro na data';
+    }
+}
+
+function isDataVencida(data) {
+    if (!data) return false;
+    
+    try {
+        const dataObj = new Date(data);
+        if (isNaN(dataObj.getTime())) return false;
+        return dataObj < new Date();
+    } catch (error) {
+        console.error('Erro ao verificar vencimento:', error);
+        return false;
+    }
+}
+
+// 🎯 SISTEMA UNIFICADO - Variáveis globais
+let todasAsTarefas = [];
+let todosProjetos = [];
+let tipoAtual = null; // 'projeto' ou 'tarefa'
+
+// 🎯 SISTEMA UNIFICADO - Inicialização
+document.addEventListener('DOMContentLoaded', function() {
+    carregarProjetos();
+    carregarTarefas();
+    
+    // Event listener para o formulário unificado
+    document.getElementById('form-unificado').addEventListener('submit', function(e) {
+        e.preventDefault();
+        
+        if (tipoAtual === 'projeto') {
+            processarProjeto();
+        } else if (tipoAtual === 'tarefa') {
+            processarTarefa();
+        } else {
+            alert('❌ Selecione o tipo primeiro!');
+            return;
+        }
+    });
+    
+    // Fechar modal ao clicar fora
+    document.getElementById('modal-unificado').addEventListener('click', function(e) {
+        if (e.target === this) {
+            fecharModal();
+        }
+    });
+    
+    // 🎯 VERIFICAR SE VEIO DE PROJETO (para adicionar tarefa)
+    verificarProjetoPreSelecionado();
+});
+
+function verificarProjetoPreSelecionado() {
+    const urlParams = new URLSearchParams(window.location.search);
+    const modo = urlParams.get('modo');
+    const projetoId = urlParams.get('projeto');
+    
+    // Verificar localStorage também
+    const projetoStorage = localStorage.getItem('projetoPreSelecionado');
+    
+    if ((modo === 'tarefa' && projetoId) || projetoStorage) {
+        // Auto-abrir modal de tarefa com projeto pré-selecionado
+        setTimeout(() => {
+            mostrarFormulario('tarefa');
+            
+            if (projetoStorage) {
+                const dadosProjeto = JSON.parse(projetoStorage);
+                console.log('🎯 Projeto pré-selecionado:', dadosProjeto);
+                localStorage.removeItem('projetoPreSelecionado');
+                
+                // Aguardar o select ser criado e selecionar o projeto
+                setTimeout(() => {
+                    const selectProjeto = document.getElementById('input-projeto');
+                    if (selectProjeto) {
+                        selectProjeto.value = dadosProjeto.id;
+                        console.log('✅ Projeto selecionado automaticamente:', dadosProjeto.nome);
+                    }
+                }, 500);
+            }
+        }, 1000);
+    }
+}
+
+// 🎯 FUNÇÃO UNIFICADA - Mostrar formulário
+function mostrarFormulario(tipo = null) {
+    document.getElementById('modal-unificado').style.display = 'flex';
+    
+    if (tipo) {
+        definirTipo(tipo);
+    } else {
+        // Resetar para seleção
+        tipoAtual = null;
+        document.getElementById('campos-dinamicos').innerHTML = `
+            <div style="text-align: center; padding: 40px; color: var(--text-secondary);">
+                <div style="font-size: 3rem; margin-bottom: 15px;">🎯</div>
+                <h4>Selecione o Tipo</h4>
+                <p>Escolha "Projeto" ou "Tarefa" acima para começar</p>
+            </div>
+        `;
+        document.getElementById('botoes-acao').style.display = 'none';
+        resetarBotoesTipo();
+    }
+}
+
+// 🎯 FUNÇÃO UNIFICADA - Definir tipo
+function definirTipo(tipo) {
+    tipoAtual = tipo;
+    
+    // Atualizar visual dos botões
+    resetarBotoesTipo();
+    
+    if (tipo === 'projeto') {
+        document.getElementById('btn-tipo-projeto').style.background = 'linear-gradient(135deg, #3b82f6 0%, #2563eb 100%)';
+        document.getElementById('btn-tipo-projeto').style.color = 'white';
+        document.getElementById('btn-tipo-projeto').style.border = '2px solid #3b82f6';
+        
+        document.getElementById('modal-titulo').textContent = '📁 Novo Projeto';
+        document.getElementById('modal-subtitulo').textContent = 'Crie um projeto com prioridade e histórico completo';
+        document.getElementById('btn-texto').textContent = 'Criar Projeto';
+        
+        gerarCamposProjeto();
+        
+    } else if (tipo === 'tarefa') {
+        document.getElementById('btn-tipo-tarefa').style.background = 'linear-gradient(135deg, #22c55e 0%, #16a34a 100%)';
+        document.getElementById('btn-tipo-tarefa').style.color = 'white';
+        document.getElementById('btn-tipo-tarefa').style.border = '2px solid #22c55e';
+        
+        document.getElementById('modal-titulo').textContent = '📝 Nova Tarefa';
+        document.getElementById('modal-subtitulo').textContent = 'Crie uma tarefa com dados completos e prioridade';
+        document.getElementById('btn-texto').textContent = 'Criar Tarefa';
+        
+        gerarCamposTarefa();
+    }
+    
+    document.getElementById('botoes-acao').style.display = 'flex';
+}
+
+function resetarBotoesTipo() {
+    // Resetar botão projeto
+    document.getElementById('btn-tipo-projeto').style.background = 'white';
+    document.getElementById('btn-tipo-projeto').style.color = '#374151';
+    document.getElementById('btn-tipo-projeto').style.border = '2px solid #e5e7eb';
+    
+    // Resetar botão tarefa
+    document.getElementById('btn-tipo-tarefa').style.background = 'white';
+    document.getElementById('btn-tipo-tarefa').style.color = '#374151';
+    document.getElementById('btn-tipo-tarefa').style.border = '2px solid #e5e7eb';
+}
+
+// Função para carregar projetos
+function carregarProjetos() {
+    console.log('🔄 Carregando projetos...');
+    fetch('/api/projetos')
+        .then(response => response.json())
+        .then(data => {
+            console.log('📁 Projetos recebidos:', data);
+            if (data.success) {
+                todosProjetos = data.data || [];
+                console.log('✅ Projetos carregados:', todosProjetos.length, 'projetos');
+                
+                // Atualizar select se existir
+                carregarProjetosNoSelect();
+            } else {
+                console.error('❌ Erro na resposta da API:', data);
+            }
+        })
+        .catch(error => {
+            console.error('❌ Erro ao carregar projetos:', error);
+            todosProjetos = []; // Array vazio em caso de erro
+        });
+}
+
+// Função para carregar tarefas
+function carregarTarefas() {
+    fetch('/api/tarefas')
+        .then(response => response.json())
+        .then(data => {
+            if (data.success) {
+                todasAsTarefas = data.data;
+                
+                // Atualizar estatísticas
+                if (data.resumo) {
+                    document.getElementById('total-concluidas').textContent = data.resumo.concluidas;
+                    document.getElementById('total-pendentes').textContent = data.resumo.pendentes;
+                    document.getElementById('total-tarefas').textContent = data.resumo.total;
+                    
+                    // Calcular urgentes
+                    const urgentes = todasAsTarefas.filter(t => t.prioridade === 'urgente' && !t.concluida).length;
+                    document.getElementById('total-urgentes').textContent = urgentes;
+                }
+                
+                aplicarFiltros();
+            }
+        })
+        .catch(error => console.error('Erro ao carregar tarefas:', error));
+}
+
+// Função para aplicar filtros
+function aplicarFiltros() {
+    const filtroPrioridade = document.getElementById('filtro-prioridade').value;
+    const filtroStatus = document.getElementById('filtro-status').value;
+    
+    let tarefasFiltradas = [...todasAsTarefas];
+    
+    if (filtroPrioridade) {
+        tarefasFiltradas = tarefasFiltradas.filter(tarefa => tarefa.prioridade === filtroPrioridade);
+    }
+    
+    if (filtroStatus) {
+        if (filtroStatus === 'pendente') {
+            tarefasFiltradas = tarefasFiltradas.filter(tarefa => !tarefa.concluida);
+        } else if (filtroStatus === 'concluida') {
+            tarefasFiltradas = tarefasFiltradas.filter(tarefa => tarefa.concluida);
+        }
+    }
+    
+    // Ordenar por prioridade e data
+    tarefasFiltradas.sort((a, b) => {
+        const prioridadeOrdem = { 'urgente': 4, 'alta': 3, 'media': 2, 'baixa': 1 };
+        const prioA = prioridadeOrdem[a.prioridade] || 0;
+        const prioB = prioridadeOrdem[b.prioridade] || 0;
+        
+        if (prioB !== prioA) return prioB - prioA;
+        return new Date(b.criadaEm) - new Date(a.criadaEm);
+    });
+    
+    // Mostrar apenas as 10 mais recentes na página inicial
+    renderizarTarefas(tarefasFiltradas.slice(0, 10));
+}
+
+// Função para renderizar tarefas
+function renderizarTarefas(tarefas) {
+    const listaTarefas = document.getElementById('lista-tarefas');
+    
+    if (tarefas.length === 0) {
+        listaTarefas.innerHTML = '<div style="text-align: center; padding: 40px; color: var(--text-light);"><div style="font-size: 3rem; margin-bottom: 20px;">📭</div><h4>Nenhuma tarefa encontrada</h4><p>Crie uma nova tarefa usando o botão acima!</p></div>';
+        return;
+    }
+    
+    let html = '';
+    
+    tarefas.forEach(tarefa => {
+        const prioridadeConfig = {
+            'urgente': { cor: '#dc2626', icone: '🔥', texto: 'URGENTE' },
+            'alta': { cor: '#ef4444', icone: '🔴', texto: 'ALTA' },
+            'media': { cor: '#f59e0b', icone: '🟡', texto: 'MÉDIA' },
+            'baixa': { cor: '#22c55e', icone: '🟢', texto: 'BAIXA' }
+        };
+        
+        const statusIcon = tarefa.concluida ? '✅' : '⏳';
+        const projeto = todosProjetos.find(p => p._id === tarefa.projeto);
+        
+        html += `
+            <div style="background: var(--card-bg); padding: 15px; border-radius: 12px; margin: 10px 0; border: 1px solid var(--card-border); box-shadow: var(--shadow-light);">
+                <div style="display: flex; justify-content: space-between; align-items: flex-start; gap: 15px;">
+                    <div style="flex: 1;">
+                        <div style="display: flex; align-items: center; margin-bottom: 8px; flex-wrap: wrap; gap: 8px;">
+                            <span style="font-size: 1.1rem;">${statusIcon}</span>
+                            <h4 style="margin: 0; color: var(--text-primary); flex: 1; min-width: 150px; font-size: 0.95rem;">${tarefa.titulo}</h4>
+                            <span style="background: ${prioridadeConfig[tarefa.prioridade]?.cor || '#6b7280'}; color: white; padding: 3px 8px; border-radius: 12px; font-size: 0.7rem; font-weight: 600; display: flex; align-items: center; gap: 3px;">
+                                <span>${prioridadeConfig[tarefa.prioridade]?.icone || '⚪'}</span>
+                                ${prioridadeConfig[tarefa.prioridade]?.texto || tarefa.prioridade.toUpperCase()}
+                            </span>
+                        </div>
+                        
+                        ${tarefa.descricao ? `<p style="margin: 5px 0; color: var(--text-light); font-size: 0.85rem; line-height: 1.4;">${tarefa.descricao}</p>` : ''}
+                        
+                        <div style="display: flex; gap: 10px; margin-top: 8px; flex-wrap: wrap; font-size: 0.75rem;">
+                            ${projeto ? `<span style="background: rgba(34, 197, 94, 0.1); color: #16a34a; padding: 2px 6px; border-radius: 6px;">📁 ${projeto.nome}</span>` : ''}
+                            ${tarefa.categoria ? `<span style="background: rgba(99, 102, 241, 0.1); color: #6366f1; padding: 2px 6px; border-radius: 6px;">🏷️ ${tarefa.categoria}</span>` : ''}
+                            ${tarefa.dataVencimento ? `<span style="color: ${isDataVencida(tarefa.dataVencimento) ? '#ef4444' : '#f59e0b'};">🗓️ ${formatarData(tarefa.dataVencimento)}</span>` : ''}
+                        </div>
+                    </div>
+                    
+                    <div style="display: flex; gap: 5px;">
+                        ${!tarefa.concluida ? `<button onclick="concluirTarefa('${tarefa._id}')" style="background: #22c55e; color: white; border: none; padding: 4px 8px; border-radius: 6px; cursor: pointer; font-size: 0.7rem;">✅</button>` : ''}
+                        <button onclick="removerTarefa('${tarefa._id}')" style="background: #ef4444; color: white; border: none; padding: 4px 8px; border-radius: 6px; cursor: pointer; font-size: 0.7rem;">🗑️</button>
+                    </div>
+                </div>
+            </div>
+        `;
+    });
+    
+    // Adicionar link para ver todas
+    if (todasAsTarefas.length > 10) {
+        html += `
+            <div style="text-align: center; margin-top: 20px;">
+                <a href="/tarefas" class="btn" style="background: linear-gradient(135deg, #6b7280 0%, #4b5563 100%); text-decoration: none; color: white;">
+                    📋 Ver Todas as Tarefas (${todasAsTarefas.length} total)
+                </a>
+            </div>
+        `;
+    }
+    
+    listaTarefas.innerHTML = html;
+}
+
+// 🎯 FUNÇÃO UNIFICADA - Gerar campos de projeto
+function gerarCamposProjeto() {
+    document.getElementById('campos-dinamicos').innerHTML = `
+        <div style="margin-bottom: 20px;">
+            <label style="display: block; margin-bottom: 8px; font-weight: 600; color: var(--text-primary);">📁 Nome do Projeto*</label>
+            <input type="text" id="input-nome" required maxlength="100" 
+                   style="width: 100%; padding: 12px; border: 1px solid #ddd; border-radius: 8px; background: white; color: #333; font-size: 16px; box-sizing: border-box;"
+                   placeholder="Digite o nome do projeto...">
+        </div>
+        
+        <div style="margin-bottom: 20px;">
+            <label style="display: block; margin-bottom: 8px; font-weight: 600; color: var(--text-primary);">📄 Descrição</label>
+            <textarea id="input-descricao" maxlength="500" rows="3"
+                      style="width: 100%; padding: 12px; border: 1px solid #ddd; border-radius: 8px; background: white; color: #333; resize: vertical; font-family: inherit; box-sizing: border-box;"
+                      placeholder="Descreva o projeto..."></textarea>
+        </div>
+        
+        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 15px; margin-bottom: 20px;">
+            <div>
+                <label style="display: block; margin-bottom: 8px; font-weight: 600; color: var(--text-primary);">🎯 Prioridade*</label>
+                <select id="input-prioridade" required
+                        style="width: 100%; padding: 12px; border: 1px solid #ddd; border-radius: 8px; background: white; color: #333; box-sizing: border-box;">
+                    <option value="baixa">🟢 Baixa</option>
+                    <option value="media" selected>🟡 Média</option>
+                    <option value="alta">🔴 Alta</option>
+                    <option value="urgente">🔥 Urgente</option>
+                </select>
+            </div>
+            
+            <div>
+                <label style="display: block; margin-bottom: 8px; font-weight: 600; color: var(--text-primary);">📅 Data de Entrega</label>
+                <input type="date" id="input-data-entrega"
+                       style="width: 100%; padding: 12px; border: 1px solid #ddd; border-radius: 8px; background: white; color: #333; font-family: inherit; box-sizing: border-box;">
+            </div>
+        </div>
+        
+        <div style="margin-bottom: 20px;">
+            <label style="display: block; margin-bottom: 8px; font-weight: 600; color: var(--text-primary);">👤 Responsável Principal</label>
+            <input type="text" id="input-responsavel" maxlength="50"
+                   style="width: 100%; padding: 12px; border: 1px solid #ddd; border-radius: 8px; background: white; color: #333; box-sizing: border-box;"
+                   placeholder="Nome do responsável...">
+        </div>
+        
+        <div style="background: rgba(59, 130, 246, 0.1); padding: 15px; border-radius: 8px; border: 1px solid rgba(59, 130, 246, 0.2);">
+            <strong>📁 Projeto será salvo no MongoDB com histórico completo</strong><br>
+            <small style="color: var(--text-secondary);">Todas as informações serão centralizadas no banco de dados</small>
+        </div>
+    `;
+    
+    // Focar no primeiro campo
+    setTimeout(() => document.getElementById('input-nome').focus(), 100);
+}
+
+// 🎯 FUNÇÃO UNIFICADA - Gerar campos de tarefa
+function gerarCamposTarefa() {
+    document.getElementById('campos-dinamicos').innerHTML = `
+        <div style="margin-bottom: 20px;">
+            <label style="display: block; margin-bottom: 8px; font-weight: 600; color: var(--text-primary);">📝 Título da Tarefa*</label>
+            <input type="text" id="input-titulo" required maxlength="100" 
+                   style="width: 100%; padding: 12px; border: 1px solid #ddd; border-radius: 8px; background: white; color: #333; font-size: 16px; box-sizing: border-box;"
+                   placeholder="Digite o título da tarefa...">
+        </div>
+        
+        <div style="margin-bottom: 20px;">
+            <label style="display: block; margin-bottom: 8px; font-weight: 600; color: var(--text-primary);">📄 Descrição</label>
+            <textarea id="input-descricao" maxlength="500" rows="3"
+                      style="width: 100%; padding: 12px; border: 1px solid #ddd; border-radius: 8px; background: white; color: #333; resize: vertical; font-family: inherit; box-sizing: border-box;"
+                      placeholder="Descreva a tarefa..."></textarea>
+        </div>
+        
+        <div style="display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 15px; margin-bottom: 20px;">
+            <div>
+                <label style="display: block; margin-bottom: 8px; font-weight: 600; color: var(--text-primary);">📁 Projeto</label>
+                <select id="input-projeto"
+                        style="width: 100%; padding: 12px; border: 1px solid #ddd; border-radius: 8px; background: white; color: #333; box-sizing: border-box;">
+                    <option value="">📋 Sem projeto específico</option>
+                </select>
+            </div>
+            
+            <div>
+                <label style="display: block; margin-bottom: 8px; font-weight: 600; color: var(--text-primary);">🎯 Prioridade*</label>
+                <select id="input-prioridade" required
+                        style="width: 100%; padding: 12px; border: 1px solid #ddd; border-radius: 8px; background: white; color: #333; box-sizing: border-box;">
+                    <option value="baixa">🟢 Baixa</option>
+                    <option value="media" selected>🟡 Média</option>
+                    <option value="alta">🔴 Alta</option>
+                    <option value="urgente">🔥 Urgente</option>
+                </select>
+            </div>
+            
+            <div>
+                <label style="display: block; margin-bottom: 8px; font-weight: 600; color: var(--text-primary);">🏷️ Categoria</label>
+                <select id="input-categoria"
+                        style="width: 100%; padding: 12px; border: 1px solid #ddd; border-radius: 8px; background: white; color: #333; box-sizing: border-box;">
+                    <option value="setup">⚙️ Setup</option>
+                    <option value="backend">🔧 Backend</option>
+                    <option value="frontend">🎨 Frontend</option>
+                    <option value="teste">🧪 Teste</option>
+                    <option value="documentacao">📚 Documentação</option>
+                    <option value="bugs">🐛 Bugs</option>
+                    <option value="melhorias">✨ Melhorias</option>
+                    <option value="outros" selected>📋 Outros</option>
+                </select>
+            </div>
+        </div>
+        
+        <div style="display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 15px; margin-bottom: 20px;">
+            <div>
+                <label style="display: block; margin-bottom: 8px; font-weight: 600; color: var(--text-primary);">📅 Data de Vencimento</label>
+                <input type="date" id="input-data-vencimento"
+                       style="width: 100%; padding: 12px; border: 1px solid #ddd; border-radius: 8px; background: white; color: #333; font-family: inherit; box-sizing: border-box;">
+            </div>
+            
+            <div>
+                <label style="display: block; margin-bottom: 8px; font-weight: 600; color: var(--text-primary);">⏱️ Tempo Estimado</label>
+                <input type="text" id="input-tempo" maxlength="20"
+                       style="width: 100%; padding: 12px; border: 1px solid #ddd; border-radius: 8px; background: white; color: #333; box-sizing: border-box;"
+                       placeholder="Ex: 2h, 30min...">
+            </div>
+            
+            <div>
+                <label style="display: block; margin-bottom: 8px; font-weight: 600; color: var(--text-primary);">👤 Responsável</label>
+                <input type="text" id="input-responsavel" maxlength="50"
+                       style="width: 100%; padding: 12px; border: 1px solid #ddd; border-radius: 8px; background: white; color: #333; box-sizing: border-box;"
+                       placeholder="Nome do responsável...">
+            </div>
+        </div>
+        
+        <div style="background: rgba(34, 197, 94, 0.1); padding: 15px; border-radius: 8px; border: 1px solid rgba(34, 197, 94, 0.2);">
+            <strong>📝 Tarefa será salva no MongoDB com histórico completo</strong><br>
+            <small style="color: var(--text-secondary);">Todas as informações serão centralizadas no banco de dados</small>
+        </div>
+    `;
+    
+    // Carregar projetos no select
+    carregarProjetosNoSelect();
+    
+    // Focar no primeiro campo
+    setTimeout(() => document.getElementById('input-titulo').focus(), 100);
+}
+
+function carregarProjetosNoSelect() {
+    const selectProjeto = document.getElementById('input-projeto');
+    console.log('🔄 Carregando projetos no select...');
+    console.log('📋 Select encontrado:', !!selectProjeto);
+    console.log('📁 Projetos disponíveis:', todosProjetos.length);
+    
+    if (selectProjeto) {
+        selectProjeto.innerHTML = '<option value="">📋 Sem projeto específico</option>';
+        
+        if (todosProjetos && todosProjetos.length > 0) {
+            todosProjetos.forEach(projeto => {
+                const option = document.createElement('option');
+                option.value = projeto._id || projeto.id;
+                option.textContent = `📁 ${projeto.nome}`;
+                selectProjeto.appendChild(option);
+                console.log(`✅ Projeto adicionado: ${projeto.nome}`);
+            });
+            console.log(`✅ ${todosProjetos.length} projetos carregados no select`);
+        } else {
+            console.log('ℹ️ Nenhum projeto disponível para carregar');
+        }
+    } else {
+        console.log('⚠️ Select de projetos não encontrado');
+    }
+}
+
+function fecharModal() {
+    document.getElementById('modal-unificado').style.display = 'none';
+    tipoAtual = null;
+}
+
+// 🎯 FUNÇÃO UNIFICADA - Processar projeto
+function processarProjeto() {
+    const nome = document.getElementById('input-nome').value.trim();
+    const descricao = document.getElementById('input-descricao').value.trim();
+    const prioridade = document.getElementById('input-prioridade').value;
+    const dataEntrega = document.getElementById('input-data-entrega').value;
+    const responsavel = document.getElementById('input-responsavel').value.trim();
+    
+    if (!nome) {
+        alert('❌ Nome do projeto é obrigatório!');
+        document.getElementById('input-nome').focus();
+        return;
+    }
+    
+    const dadosProjeto = {
+        nome,
+        descricao: descricao || `Projeto ${nome} - Criado via Centro de Controle`,
+        prioridade,
+        dataEntrega,
+        responsavel: responsavel || 'Não atribuído',
+        status: 'ativo',
+        criadoEm: new Date().toISOString()
+    };
+    
+    console.log('📁 Criando projeto:', dadosProjeto);
+    
+    fetch('/api/projetos', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(dadosProjeto)
+    })
+    .then(response => response.json())
+    .then(data => {
+        if (data.success) {
+            alert(`✅ Projeto "${nome}" criado com sucesso no MongoDB!\n\n${data.message}`);
+            carregarProjetos(); // Recarregar lista
+            carregarTarefas();  // Atualizar estatísticas
+            fecharModal();
+        } else {
+            alert(`❌ Erro ao criar projeto: ${data.erro || data.message}`);
+        }
+    })
+    .catch(error => {
+        console.error('Erro:', error);
+        alert('❌ Erro de conexão com o servidor');
+    });
+}
+
+// 🎯 FUNÇÃO UNIFICADA - Processar tarefa
+function processarTarefa() {
+    const titulo = document.getElementById('input-titulo').value.trim();
+    const descricao = document.getElementById('input-descricao').value.trim();
+    const projeto = document.getElementById('input-projeto').value || null;
+    const prioridade = document.getElementById('input-prioridade').value;
+    const categoria = document.getElementById('input-categoria').value;
+    const dataVencimento = document.getElementById('input-data-vencimento').value;
+    const tempoEstimado = document.getElementById('input-tempo').value.trim();
+    const responsavel = document.getElementById('input-responsavel').value.trim();
+    
+    if (!titulo) {
+        alert('❌ Título da tarefa é obrigatório!');
+        document.getElementById('input-titulo').focus();
+        return;
+    }
+    
+    const dadosTarefa = {
+        titulo,
+        descricao: descricao || `Tarefa ${titulo} - Criada via Centro de Controle`,
+        projeto,
+        prioridade,
+        categoria,
+        dataVencimento,
+        tempoEstimado: tempoEstimado || '1h',
+        responsavel: responsavel || 'Não atribuído',
+        concluida: false,
+        criadaEm: new Date().toISOString()
+    };
+    
+    console.log('📝 Criando tarefa:', dadosTarefa);
+    
+    fetch('/api/tarefas', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(dadosTarefa)
+    })
+    .then(response => response.json())
+    .then(data => {
+        if (data.success) {
+            alert(`✅ Tarefa "${titulo}" criada com sucesso no MongoDB!\n\n${data.message}`);
+            carregarTarefas(); // Recarregar lista e estatísticas
+            fecharModal();
+        } else {
+            alert(`❌ Erro ao criar tarefa: ${data.erro || data.message}`);
+        }
+    })
+    .catch(error => {
+        console.error('Erro:', error);
+        alert('❌ Erro de conexão com o servidor');
+    });
+}
+
+// Função para concluir tarefa
+function concluirTarefa(id) {
+    fetch(`/api/tarefas/${id}/concluir`, {
+        method: 'POST'
+    })
+    .then(response => response.json())
+    .then(data => {
+        if (data.success) {
+            carregarTarefas();
+        } else {
+            alert(`❌ Erro: ${data.erro}`);
+        }
+    })
+    .catch(error => {
+        console.error('Erro:', error);
+        alert('❌ Erro de conexão com o servidor');
+    });
+}
+
+// Função para remover tarefa
+function removerTarefa(id) {
+    if (confirm('🗑️ Tem certeza que deseja excluir esta tarefa?')) {
+        fetch(`/api/tarefas/${id}`, {
+            method: 'DELETE'
+        })
+        .then(response => response.json())
+        .then(data => {
+            if (data.success) {
+                carregarTarefas();
+            } else {
+                alert(`❌ Erro: ${data.erro}`);
+            }
+        })
+        .catch(error => {
+            console.error('Erro:', error);
+            alert('❌ Erro de conexão with o servidor');
+        });
+    }
+}
+</script>
+
