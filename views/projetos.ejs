@@ -1,54 +1,54 @@
-<%- include('layout', { titulo: titulo }) %>
-
-<section class="container">
-    <div class="header-section">
-        <h1>📁 <%= titulo %></h1>
-        <p>Gerencie seus projetos de forma organizada e eficiente</p>
-    </div>
-
-    <!-- Formulário para novo projeto -->
-    <div class="form-container">
-        <h2>➕ Criar Novo Projeto</h2>
-        <form id="form-novo-projeto" class="projeto-form">
-            <div class="form-group">
-                <label for="nome">Nome do Projeto *</label>
-                <input type="text" id="nome" name="nome" placeholder="Digite o nome do projeto" required minlength="3" maxlength="100" />
-            </div>
-            
-            <div class="form-group">
-                <label for="descricao">Descrição (opcional)</label>
-                <textarea id="descricao" name="descricao" placeholder="Descreva brevemente o projeto" rows="3" maxlength="500"></textarea>
-            </div>
-            
-            <div class="form-actions">
-                <button type="submit" class="btn btn-primary">
-                    <span>🚀</span> Criar Projeto
-                </button>
-                <button type="reset" class="btn btn-secondary">
-                    <span>🔄</span> Limpar
-                </button>
-            </div>
-        </form>
-    </div>
-
-    <!-- Lista de projetos -->
-    <div class="projetos-container">
-        <div class="projetos-header">
-            <h2>📋 Lista de Projetos</h2>
-            <div class="projetos-stats">
-                <span id="total-projetos">0 projetos</span>
-            </div>
+<!-- Navegação -->
+<div class="card" style="background: linear-gradient(135deg, rgba(34, 197, 94, 0.1) 0%, rgba(34, 197, 94, 0.05) 100%); border: 1px solid rgba(34, 197, 94, 0.2); margin-bottom: 20px;">
+    <div class="flex-responsive" style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 15px;">
+        <div>
+            <h2 style="margin: 0; color: #16a34a;">📁 Gerenciar Projetos</h2>
+            <p style="margin: 5px 0 0; color: var(--text-secondary);">Organize seus projetos e suas tarefas em um só lugar</p>
         </div>
-        
-        <div id="loading" class="loading" style="display: none;">
-            🔄 Carregando projetos...
+        <div class="flex-responsive" style="display: flex; gap: 10px;">
+            <a href="/tarefas" class="btn" style="background: linear-gradient(135deg, #3b82f6 0%, #2563eb 100%); text-decoration: none; color: white; display: flex; align-items: center; gap: 8px;">
+                ✅ Ver Todas as Tarefas
+            </a>
+            <a href="/" class="btn" style="background: linear-gradient(135deg, #6b7280 0%, #4b5563 100%); text-decoration: none; color: white;">
+                🏠 Dashboard
+            </a>
         </div>
-        
-        <div id="error-message" class="error-message" style="display: none;"></div>
-        
-        <ul id="lista-projetos" class="projetos-list"></ul>
     </div>
-</section>
+</div>
+
+<!-- 🎯 VISUALIZAÇÃO DE PROJETOS E TAREFAS -->
+<div class="card">
+    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 25px;">
+        <h3 style="margin: 0;">📋 Meus Projetos</h3>
+        <a href="/" style="background: linear-gradient(135deg, #22c55e 0%, #16a34a 100%); color: white; padding: 10px 20px; text-decoration: none; border-radius: 8px; font-weight: bold;">
+            ➕ Criar Projeto
+        </a>
+    </div>
+    
+    <div id="loading" style="display: block; text-align: center; padding: 20px; color: #666;">
+        🔄 Carregando projetos...
+    </div>
+    
+    <div id="projetos-container" style="display: none;">
+        <!-- Projetos serão carregados aqui -->
+    </div>
+    
+    <div id="empty-state" style="display: none; text-align: center; padding: 40px; color: #666;">
+        <div style="font-size: 3rem; margin-bottom: 15px;">📁</div>
+        <h4>Nenhum projeto encontrado</h4>
+        <p>Crie seu primeiro projeto para começar!</p>
+        <a href="/" style="background: linear-gradient(135deg, #3b82f6 0%, #2563eb 100%); color: white; padding: 12px 24px; text-decoration: none; border-radius: 8px; font-weight: bold; margin-top: 15px; display: inline-block;">
+            🚀 Criar Primeiro Projeto
+        </a>
+    </div>
+</div>
+
+<div class="card">
+    <h3>📋 Lista de Projetos</h3>
+    <div id="loading" style="display: none;">🔄 Carregando projetos...</div>
+    <div id="error-message" style="display: none; color: red; margin: 10px 0;"></div>
+    <ul id="lista-projetos" style="list-style: none; padding: 0;"></ul>
+</div>
 
 <style>
 .container {
@@ -285,231 +285,387 @@
 </style>
 
 <script>
-// Estado da aplicação
+// 🎯 SISTEMA ENXUTO - Projetos com Tarefas
 let projetos = [];
 
-// Elementos DOM
-const form = document.getElementById('form-novo-projeto');
-const loading = document.getElementById('loading');
-const errorMessage = document.getElementById('error-message');
-const listaProjetos = document.getElementById('lista-projetos');
-const totalProjetos = document.getElementById('total-projetos');
+// Carregar projetos ao inicializar
+document.addEventListener('DOMContentLoaded', function() {
+    carregarProjetosComTarefas();
+});
 
-/**
- * Exibe mensagem de erro
- */
-function mostrarErro(mensagem) {
-    errorMessage.textContent = mensagem;
-    errorMessage.style.display = 'block';
-    setTimeout(() => {
-        errorMessage.style.display = 'none';
-    }, 5000);
-}
-
-/**
- * Exibe/oculta loading
- */
-function mostrarLoading(show = true) {
-    loading.style.display = show ? 'block' : 'none';
-}
-
-/**
- * Atualiza contador de projetos
- */
-function atualizarStats() {
-    const total = projetos.length;
-    totalProjetos.textContent = total === 0 ? 'Nenhum projeto' : 
-                                total === 1 ? '1 projeto' : 
-                                `${total} projetos`;
-}
-
-/**
- * Carrega projetos da API
- */
-async function carregarProjetos() {
+async function carregarProjetosComTarefas() {
     try {
-        mostrarLoading(true);
+        document.getElementById('loading').style.display = 'block';
+        document.getElementById('projetos-container').style.display = 'none';
+        document.getElementById('empty-state').style.display = 'none';
         
-        const response = await fetch('/api/projetos');
-        const result = await response.json();
+        // Carregar projetos e tarefas em paralelo
+        const [projetosResponse, tarefasResponse] = await Promise.all([
+            fetch('/api/projetos'),
+            fetch('/api/tarefas')
+        ]);
         
-        if (!response.ok) {
-            throw new Error(result.error || 'Erro ao carregar projetos');
+        const projetosData = await projetosResponse.json();
+        const tarefasData = await tarefasResponse.json();
+        
+        if (!projetosData.success) {
+            throw new Error('Erro ao carregar projetos');
         }
         
-        projetos = result.data || result;
-        renderizarProjetos();
-        atualizarStats();
+        projetos = projetosData.data || [];
+        const tarefas = tarefasData.success ? tarefasData.data || [] : [];
+        
+        // Organizar tarefas por projeto
+        const tarefasPorProjeto = {};
+        tarefas.forEach(tarefa => {
+            const projetoId = tarefa.projeto || 'sem-projeto';
+            if (!tarefasPorProjeto[projetoId]) {
+                tarefasPorProjeto[projetoId] = [];
+            }
+            tarefasPorProjeto[projetoId].push(tarefa);
+        });
+        
+        if (projetos.length === 0) {
+            document.getElementById('empty-state').style.display = 'block';
+        } else {
+            renderizarProjetos(projetos, tarefasPorProjeto);
+        }
         
     } catch (error) {
-        console.error('Erro ao carregar projetos:', error);
-        mostrarErro('Erro ao carregar projetos: ' + error.message);
-    } finally {
-        mostrarLoading(false);
-    }
-}
-
-/**
- * Renderiza lista de projetos
- */
-function renderizarProjetos() {
-    if (projetos.length === 0) {
-        listaProjetos.innerHTML = `
-            <div class="empty-state">
-                <h3>📭 Nenhum projeto encontrado</h3>
-                <p>Crie seu primeiro projeto usando o formulário acima!</p>
+        console.error('Erro:', error);
+        document.getElementById('projetos-container').innerHTML = `
+            <div style="text-align: center; padding: 20px; color: #ef4444;">
+                ❌ Erro ao carregar projetos: ${error.message}
             </div>
         `;
-        return;
+        document.getElementById('projetos-container').style.display = 'block';
+    } finally {
+        document.getElementById('loading').style.display = 'none';
     }
+}
+
+function renderizarProjetos(projetos, tarefasPorProjeto) {
+    const container = document.getElementById('projetos-container');
     
-    listaProjetos.innerHTML = projetos.map(projeto => `
-        <li class="projeto-item" data-id="${projeto._id}">
-            <div class="projeto-nome">${projeto.nome}</div>
-            ${projeto.descricao ? `<div class="projeto-descricao">${projeto.descricao}</div>` : ''}
-            <div class="projeto-actions">
-                <button class="btn btn-edit btn-small" onclick="editarProjeto('${projeto._id}')">
-                    ✏️ Editar
-                </button>
-                <button class="btn btn-delete btn-small" onclick="deletarProjeto('${projeto._id}')">
-                    🗑️ Deletar
-                </button>
+    let html = '';
+    
+    projetos.forEach(projeto => {
+        const tarefasDoProjeto = tarefasPorProjeto[projeto._id] || [];
+        const totalTarefas = tarefasDoProjeto.length;
+        const tarefasConcluidas = tarefasDoProjeto.filter(t => t.concluida).length;
+        const porcentagem = totalTarefas > 0 ? Math.round((tarefasConcluidas / totalTarefas) * 100) : 0;
+        
+        // Contadores por prioridade
+        const prioridades = {
+            urgente: tarefasDoProjeto.filter(t => t.prioridade === 'urgente' && !t.concluida).length,
+            alta: tarefasDoProjeto.filter(t => t.prioridade === 'alta' && !t.concluida).length,
+            media: tarefasDoProjeto.filter(t => t.prioridade === 'media' && !t.concluida).length,
+            baixa: tarefasDoProjeto.filter(t => t.prioridade === 'baixa' && !t.concluida).length
+        };
+        
+        html += `
+            <div style="background: white; border-radius: 12px; padding: 20px; margin-bottom: 20px; box-shadow: 0 2px 10px rgba(0,0,0,0.1); border: 1px solid #e5e7eb;">
+                <!-- Cabeçalho do Projeto -->
+                <div style="display: flex; justify-content: space-between; align-items: start; margin-bottom: 15px;">
+                    <div style="flex: 1;">
+                        <h4 style="margin: 0 0 5px 0; color: #1f2937; font-size: 1.2rem;">📁 ${projeto.nome}</h4>
+                        ${projeto.descricao ? `<p style="margin: 0; color: #6b7280; font-size: 0.9rem;">${projeto.descricao}</p>` : ''}
+                    </div>
+                    <div class="project-actions" style="display: flex; gap: 8px;">
+                        <button onclick="adicionarTarefaAoProjeto('${projeto._id}', '${projeto.nome}')" 
+                                style="background: #10b981; color: white; border: none; padding: 6px 12px; border-radius: 6px; font-size: 0.8rem; cursor: pointer;">
+                            ➕ Tarefa
+                        </button>
+                        <button onclick="editarProjeto('${projeto._id}')" 
+                                style="background: #f59e0b; color: white; border: none; padding: 6px 12px; border-radius: 6px; font-size: 0.8rem; cursor: pointer;">
+                            ✏️
+                        </button>
+                        <button onclick="excluirProjeto('${projeto._id}', '${projeto.nome}')" 
+                                style="background: #dc2626; color: white; border: none; padding: 6px 12px; border-radius: 6px; font-size: 0.8rem; cursor: pointer;">
+                            🗑️
+                        </button>
+                    </div>
+                </div>
+                
+                <!-- Estatísticas do Projeto -->
+                <div class="project-stats-grid" style="display: grid; grid-template-columns: repeat(auto-fit, minmax(120px, 1fr)); gap: 10px; margin-bottom: 15px; padding: 12px; background: #f9fafb; border-radius: 8px;">
+                    <div style="text-align: center;">
+                        <div style="font-size: 1.2rem; font-weight: bold; color: #059669;">${totalTarefas}</div>
+                        <div style="font-size: 0.7rem; color: #6b7280;">TOTAL</div>
+                    </div>
+                    <div style="text-align: center;">
+                        <div style="font-size: 1.2rem; font-weight: bold; color: #22c55e;">${tarefasConcluidas}</div>
+                        <div style="font-size: 0.7rem; color: #6b7280;">CONCLUÍDAS</div>
+                    </div>
+                    <div style="text-align: center;">
+                        <div style="font-size: 1.2rem; font-weight: bold; color: #3b82f6;">${porcentagem}%</div>
+                        <div style="font-size: 0.7rem; color: #6b7280;">PROGRESSO</div>
+                    </div>
+                    ${prioridades.urgente > 0 ? `
+                    <div style="text-align: center;">
+                        <div style="font-size: 1.2rem; font-weight: bold; color: #dc2626;">${prioridades.urgente}</div>
+                        <div style="font-size: 0.7rem; color: #6b7280;">URGENTES</div>
+                    </div>
+                    ` : ''}
+                </div>
+                
+                <!-- Barra de Progresso -->
+                <div style="background: #e5e7eb; height: 8px; border-radius: 4px; margin-bottom: 15px; overflow: hidden;">
+                    <div style="background: linear-gradient(90deg, #22c55e 0%, #16a34a 100%); height: 100%; width: ${porcentagem}%; transition: width 0.3s ease;"></div>
+                </div>
+                
+                <!-- Tarefas do Projeto -->
+                <div id="tarefas-projeto-${projeto._id}">
+                    ${renderizarTarefasDoProjeto(tarefasDoProjeto)}
+                </div>
             </div>
-        </li>
-    `).join('');
+        `;
+    });
+    
+    container.innerHTML = html;
+    container.style.display = 'block';
 }
 
-/**
- * Criar novo projeto
- */
-async function criarProjeto(dados) {
-    try {
-        const response = await fetch('/api/projetos', {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json'
-            },
-            body: JSON.stringify(dados)
-        });
-        
-        const result = await response.json();
-        
-        if (!response.ok) {
-            throw new Error(result.error || 'Erro ao criar projeto');
-        }
-        
-        form.reset();
-        carregarProjetos();
-        
-        // Feedback visual
-        const submitBtn = form.querySelector('button[type="submit"]');
-        const originalText = submitBtn.innerHTML;
-        submitBtn.innerHTML = '✅ Projeto Criado!';
-        submitBtn.disabled = true;
-        
-        setTimeout(() => {
-            submitBtn.innerHTML = originalText;
-            submitBtn.disabled = false;
-        }, 2000);
-        
-    } catch (error) {
-        console.error('Erro ao criar projeto:', error);
-        mostrarErro('Erro ao criar projeto: ' + error.message);
+function renderizarTarefasDoProjeto(tarefas) {
+    if (tarefas.length === 0) {
+        return `
+            <div style="text-align: center; padding: 20px; color: #6b7280; background: #f9fafb; border-radius: 8px; border: 2px dashed #d1d5db;">
+                <div style="font-size: 1.5rem; margin-bottom: 8px;">📝</div>
+                <p style="margin: 0; font-size: 0.9rem;">Nenhuma tarefa criada ainda</p>
+            </div>
+        `;
     }
+    
+    const tarefasRecentes = tarefas.slice(0, 5); // Mostrar só 5 mais recentes
+    let html = '<div style="display: flex; flex-direction: column; gap: 8px;">';
+    
+    tarefasRecentes.forEach(tarefa => {
+        const prioridadeConfig = {
+            'urgente': { cor: '#dc2626', icone: '🔥', bg: 'rgba(220, 38, 38, 0.1)' },
+            'alta': { cor: '#ef4444', icone: '🔴', bg: 'rgba(239, 68, 68, 0.1)' },
+            'media': { cor: '#f59e0b', icone: '🟡', bg: 'rgba(245, 158, 11, 0.1)' },
+            'baixa': { cor: '#22c55e', icone: '🟢', bg: 'rgba(34, 197, 94, 0.1)' }
+        };
+        
+        const config = prioridadeConfig[tarefa.prioridade] || prioridadeConfig.media;
+        const statusIcon = tarefa.concluida ? '✅' : '⏳';
+        
+        html += `
+            <div style="display: flex; align-items: center; gap: 10px; padding: 8px 12px; background: ${config.bg}; border-radius: 6px; border-left: 3px solid ${config.cor};">
+                <span style="font-size: 0.9rem;">${statusIcon}</span>
+                <span style="flex: 1; font-size: 0.85rem; ${tarefa.concluida ? 'text-decoration: line-through; color: #6b7280;' : ''}">${tarefa.titulo}</span>
+                <span style="font-size: 0.7rem; background: ${config.cor}; color: white; padding: 2px 6px; border-radius: 4px;">${config.icone}</span>
+            </div>
+        `;
+    });
+    
+    if (tarefas.length > 5) {
+        html += `
+            <div style="text-align: center; padding: 8px;">
+                <small style="color: #6b7280;">... e mais ${tarefas.length - 5} tarefas</small>
+            </div>
+        `;
+    }
+    
+    html += '</div>';
+    return html;
 }
 
-/**
- * Deletar projeto
- */
-async function deletarProjeto(id) {
-    if (!confirm('Tem certeza que deseja deletar este projeto?')) {
+function adicionarTarefaAoProjeto(projetoId, projetoNome) {
+    // Redirecionar para home com projeto pre-selecionado
+    localStorage.setItem('projetoPreSelecionado', JSON.stringify({
+        id: projetoId,
+        nome: projetoNome
+    }));
+    window.location.href = '/?modo=tarefa&projeto=' + projetoId;
+}
+
+function editarProjeto(projetoId) {
+    alert('🚧 Função de edição em desenvolvimento!\n\nPor enquanto, crie um novo projeto na página inicial.');
+}
+
+async function excluirProjeto(projetoId, projetoNome) {
+    const confirmacao = confirm(`⚠️ ATENÇÃO: Excluir Projeto\n\nTem certeza que deseja excluir o projeto "${projetoNome}"?\n\nEsta ação irá:\n• Remover o projeto permanentemente\n• Remover TODAS as tarefas associadas a este projeto\n\nEsta ação NÃO pode ser desfeita!`);
+    
+    if (!confirmacao) {
         return;
     }
     
     try {
-        const response = await fetch(`/api/projetos/${id}`, {
-            method: 'DELETE'
-        });
+        console.log('🗑️ Excluindo projeto:', projetoId);
         
-        const result = await response.json();
-        
-        if (!response.ok) {
-            throw new Error(result.error || 'Erro ao deletar projeto');
-        }
-        
-        carregarProjetos();
-        
-    } catch (error) {
-        console.error('Erro ao deletar projeto:', error);
-        mostrarErro('Erro ao deletar projeto: ' + error.message);
-    }
-}
-
-/**
- * Editar projeto (implementação básica)
- */
-function editarProjeto(id) {
-    const projeto = projetos.find(p => p._id === id);
-    if (!projeto) return;
-    
-    const novoNome = prompt('Novo nome do projeto:', projeto.nome);
-    if (!novoNome || novoNome.trim() === projeto.nome) return;
-    
-    const novaDescricao = prompt('Nova descrição:', projeto.descricao || '');
-    
-    atualizarProjeto(id, {
-        nome: novoNome.trim(),
-        descricao: novaDescricao ? novaDescricao.trim() : ''
-    });
-}
-
-/**
- * Atualizar projeto
- */
-async function atualizarProjeto(id, dados) {
-    try {
-        const response = await fetch(`/api/projetos/${id}`, {
-            method: 'PUT',
+        const response = await fetch(`/api/projetos/${projetoId}`, {
+            method: 'DELETE',
             headers: {
-                'Content-Type': 'application/json'
-            },
-            body: JSON.stringify(dados)
+                'Content-Type': 'application/json',
+            }
         });
         
         const result = await response.json();
         
-        if (!response.ok) {
-            throw new Error(result.error || 'Erro ao atualizar projeto');
+        if (result.success) {
+            alert(`✅ Projeto "${projetoNome}" foi excluído com sucesso!`);
+            // Recarregar a página para atualizar a lista
+            carregarProjetosComTarefas();
+        } else {
+            alert(`❌ Erro ao excluir projeto: ${result.erro || 'Erro desconhecido'}`);
         }
-        
-        carregarProjetos();
-        
     } catch (error) {
-        console.error('Erro ao atualizar projeto:', error);
-        mostrarErro('Erro ao atualizar projeto: ' + error.message);
+        console.error('❌ Erro:', error);
+        alert('❌ Erro de conexão com o servidor');
     }
 }
 
-// Event Listeners
-form.addEventListener('submit', async (e) => {
+// Form submit
+document.getElementById('form-novo-projeto').addEventListener('submit', async (e) => {
     e.preventDefault();
     
-    const formData = new FormData(form);
+    const btnCriar = document.getElementById('btn-criar');
+    const projetoId = btnCriar.dataset.projetoId;
+    const isUpdate = !!projetoId; // Se tem ID, é atualização
+    
+    const formData = new FormData(e.target);
     const dados = {
-        nome: formData.get('nome').trim(),
-        descricao: formData.get('descricao').trim()
+        nome: formData.get('nome'),
+        descricao: formData.get('descricao')
     };
     
-    if (!dados.nome) {
-        mostrarErro('Nome do projeto é obrigatório');
+    console.log('📝 Dados do formulário:', dados);
+    console.log('🔄 Modo atualização:', isUpdate, 'ID:', projetoId);
+    
+    if (!dados.nome || dados.nome.trim() === '') {
+        alert('Nome do projeto é obrigatório');
         return;
     }
     
-    await criarProjeto(dados);
+    try {
+        console.log('🚀 Enviando requisição...');
+        
+        // Feedback visual - desabilitar botão e mostrar loading
+        const textoOriginal = btnCriar.innerHTML;
+        btnCriar.innerHTML = isUpdate ? '⏳ Atualizando...' : '⏳ Criando...';
+        btnCriar.disabled = true;
+        
+        // Definir URL e método baseado no modo
+        const url = isUpdate ? `/api/projetos/${projetoId}` : '/api/projetos';
+        const method = isUpdate ? 'PUT' : 'POST';
+        
+        const response = await fetch(url, {
+            method: method,
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(dados)
+        });
+        
+        console.log('📡 Response status:', response.status);
+        console.log('📡 Response ok:', response.ok);
+        
+        const result = await response.json();
+        console.log('📡 Response data:', result);
+        
+        if (response.ok) {
+            // Feedback visual de sucesso
+            btnCriar.innerHTML = isUpdate ? '✅ Atualizado!' : '✅ Criado!';
+            btnCriar.style.background = '#28a745';
+            
+            // Aguardar um momento para o usuário ver
+            setTimeout(() => {
+                // Restaurar botão
+                btnCriar.disabled = false;
+                btnCriar.style.background = '#007acc';
+                
+                // Recarregar a lista de projetos
+                carregarProjetos();
+                
+                if (isUpdate) {
+                    // Projeto foi atualizado - mostrar opções
+                    const novoOuContinuar = confirm('✅ Projeto "' + result.data.nome + '" atualizado com sucesso!\n\n🔄 O que deseja fazer?\n\n✅ OK = Criar NOVO projeto\n❌ Cancelar = Continuar editando este projeto');
+                    
+                    if (novoOuContinuar) {
+                        // Limpar para novo projeto
+                        e.target.reset();
+                        btnCriar.innerHTML = '🚀 Criar Projeto';
+                        delete btnCriar.dataset.projetoId;
+                        document.querySelector('input[name="nome"]').focus();
+                    } else {
+                        // Continuar editando
+                        btnCriar.innerHTML = '✏️ Atualizar Projeto';
+                        document.getElementById('btn-novo').style.display = 'inline-block';
+                        document.querySelector('textarea[name="descricao"]').focus();
+                    }
+                } else {
+                    // Projeto foi criado - mostrar opções
+                    const continuar = confirm('✅ Projeto "' + result.data.nome + '" criado com sucesso!\n\n🔄 O que deseja fazer?\n\n✅ OK = Criar OUTRO projeto\n❌ Cancelar = Continuar editando este projeto');
+                    
+                    if (continuar) {
+                        // Limpar formulário para novo projeto
+                        e.target.reset();
+                        btnCriar.innerHTML = '🚀 Criar Projeto';
+                        document.querySelector('input[name="nome"]').focus();
+                    } else {
+                        // Manter dados do projeto recém criado no formulário para edição
+                        document.querySelector('input[name="nome"]').value = result.data.nome;
+                        document.querySelector('textarea[name="descricao"]').value = result.data.descricao || '';
+                        
+                        // Mudar o botão para "Atualizar"
+                        btnCriar.innerHTML = '✏️ Atualizar Projeto';
+                        btnCriar.dataset.projetoId = result.data.id;
+                        
+                        // Mostrar botão "Novo Projeto"
+                        document.getElementById('btn-novo').style.display = 'inline-block';
+                        
+                        // Focar na descrição para continuar editando
+                        document.querySelector('textarea[name="descricao"]').focus();
+                    }
+                }
+            }, 1000);
+            
+        } else {
+            // Restaurar botão em caso de erro
+            btnCriar.innerHTML = textoOriginal;
+            btnCriar.disabled = false;
+            
+            console.error('❌ Erro da API:', result);
+            alert('❌ Erro: ' + (result.error || result.message || 'Erro desconhecido'));
+        }
+    } catch (error) {
+        // Restaurar botão em caso de erro
+        const btnCriar = document.getElementById('btn-criar');
+        if (btnCriar) {
+            btnCriar.innerHTML = textoOriginal || '🚀 Criar Projeto';
+            btnCriar.disabled = false;
+        }
+        
+        console.error('❌ Erro de rede:', error);
+        alert('❌ Erro de rede: ' + error.message);
+    }
 });
 
-// Inicialização
-document.addEventListener('DOMContentLoaded', () => {
-    carregarProjetos();
-});
+
+
+// Função para alternar para modo "Novo Projeto"
+function novoProjetoMode() {
+    const form = document.getElementById('form-novo-projeto');
+    const btnCriar = document.getElementById('btn-criar');
+    const btnNovo = document.getElementById('btn-novo');
+    
+    // Limpar formulário
+    form.reset();
+    
+    // Restaurar botão criar
+    btnCriar.innerHTML = '🚀 Criar Projeto';
+    delete btnCriar.dataset.projetoId;
+    
+    // Esconder botão "Novo Projeto"
+    btnNovo.style.display = 'none';
+    
+    // Focar no campo nome
+    document.querySelector('input[name="nome"]').focus();
+    
+    console.log('🔄 Modo alterado para: Criar Novo Projeto');
+}
+
+// Carregar projetos ao inicializar
+carregarProjetos();
+
+
 </script>

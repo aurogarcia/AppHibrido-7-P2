@@ -8,6 +8,21 @@
 const express = require('express');
 const router = express.Router();
 
+// Debug: Middleware para logar todas as requisições da API
+router.use((req, res, next) => {
+    console.log(`🔍 DEBUG: Rota API acessada: ${req.method} ${req.path}`);
+    next();
+});
+
+/**
+ * TESTE SIMPLES
+ * =============
+ */
+router.get('/test', (req, res) => {
+    console.log('🧪 Rota de teste acessada!');
+    res.json({ message: 'API funcionando!', timestamp: new Date().toISOString() });
+});
+
 /**
  * STATUS DA API
  * =============
@@ -183,13 +198,14 @@ router.delete('/tarefas/:id', (req, res) => {
 });
 
 /**
- * ROTAS DE PROJETOS
+ * ROTAS DE PROJETOS - TEMPORARIAMENTE COMENTADAS
  * =================
  */
 
-const ProjetoService = require('../service/ProjetoService');
-const { validarProjeto, validarId } = require('../middleware/validation');
+// const ProjetoService = require('../service/ProjetoService'); // Temporariamente comentado
+// const { validarProjeto, validarId } = require('../middleware/validation'); // Temporariamente comentado
 
+/*
 /**
  * LISTAR PROJETOS
  * ===============
@@ -225,7 +241,7 @@ router.get('/projetos', async (req, res) => {
  * Rota: POST /api/projetos
  * Descrição: Cria um novo projeto
  */
-router.post('/projetos', validarProjeto, async (req, res) => {
+router.post('/projetos', async (req, res) => {
     console.log('➕ Criando novo projeto...');
     console.log('Dados recebidos:', req.body);
     
@@ -255,7 +271,7 @@ router.post('/projetos', validarProjeto, async (req, res) => {
  * Rota: GET /api/projetos/:id
  * Descrição: Retorna um projeto específico por ID
  */
-router.get('/projetos/:id', validarId, async (req, res) => {
+router.get('/projetos/:id', async (req, res) => {
     console.log(`🔍 Buscando projeto ${req.params.id}...`);
     
     try {
@@ -292,7 +308,7 @@ router.get('/projetos/:id', validarId, async (req, res) => {
  * Rota: PUT /api/projetos/:id
  * Descrição: Atualiza um projeto existente
  */
-router.put('/projetos/:id', validarId, validarProjeto, async (req, res) => {
+router.put('/projetos/:id', async (req, res) => {
     console.log(`🔄 Atualizando projeto ${req.params.id}...`);
     console.log('Dados recebidos:', req.body);
     
@@ -331,7 +347,7 @@ router.put('/projetos/:id', validarId, validarProjeto, async (req, res) => {
  * Rota: DELETE /api/projetos/:id
  * Descrição: Deleta um projeto
  */
-router.delete('/projetos/:id', validarId, async (req, res) => {
+router.delete('/projetos/:id', async (req, res) => {
     console.log(`🗑️ Deletando projeto ${req.params.id}...`);
     
     try {
@@ -361,6 +377,7 @@ router.delete('/projetos/:id', validarId, async (req, res) => {
         });
     }
 });
+// FIM DO COMENTÁRIO DE PROJETOS */
 
 module.exports = router;
 

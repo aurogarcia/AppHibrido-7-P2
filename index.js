@@ -41,7 +41,7 @@ const cors = require('cors');
 // Módulos internos (nossa aplicação)
 const { connectToDatabase, getConnectionStatus, testConnection } = require('./config/database');
 const pagesRoutes = require('./routes/pages');
-const apiRoutes = require('./routes/api');
+const apiRoutes = require('./routes/api-database'); // API conectada ao banco de dados
 
 // ============================================================================
 // ⚙️ CONFIGURAÇÕES E CONSTANTES
@@ -152,11 +152,23 @@ app.get('/health', (req, res) => {
     });
 });
 
-// Configuração das rotas de páginas (interface web)
-app.use('/', pagesRoutes);
+// Rota de teste direto no index.js
+app.get('/api/direct-test', (req, res) => {
+    console.log('✅ ROTA DIRETA NO INDEX.JS FUNCIONANDO!');
+    res.json({ 
+        message: 'Rota direta funcionando!', 
+        timestamp: new Date().toISOString(),
+        source: 'index.js'
+    });
+});
 
-// Configuração das rotas de API (endpoints REST)
+// Configuração das rotas de API (endpoints REST) - ANTES das páginas!
+console.log('🔄 Carregando rotas de API...');
 app.use('/api', apiRoutes);
+
+// Configuração das rotas de páginas (interface web) - DEPOIS das APIs!
+console.log('🔄 Carregando rotas de páginas...');
+app.use('/', pagesRoutes);
 
 // ============================================================================
 // 🚨 MIDDLEWARE DE TRATAMENTO DE ERROS

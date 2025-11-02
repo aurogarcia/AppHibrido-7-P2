@@ -65,7 +65,15 @@ router.get('/sobre', (req, res) => {
  * Descrição: Página de contato
  */
  router.get('/projetos', (req, res) => {
-  res.render('projetos', { titulo: 'Projetos' });
+    console.log('📁 Acessando página de projetos...');
+    
+    const pageData = {
+        title: 'Projetos',
+        titulo: 'Gerenciar Projetos',
+        description: 'Página para gerenciar projetos'
+    };
+    
+    res.render('projetos', pageData);
  });
 
 router.get('/contato', (req, res) => {
